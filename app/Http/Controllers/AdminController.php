@@ -19,8 +19,8 @@ class AdminController extends Controller
 
         // Attempt to log in the admin
         if (Auth::guard('admin')->attempt($credentials)) {
-            # redirect after successful login
-              return redirect()->intended('admin.dashboard');
+            // return redirect()->route('admin.dashboard');
+            return redirect()->intended('admin.dashboard');
         }
 
 
