@@ -26,8 +26,32 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/add-group', [GroupController::class, 'create'])->name('groups.create');
 Route::post('/add-group', [GroupController::class, 'store'])->name('groups.store');
 
+// For users
+Route::get('/facebook', [FacebookGroupController::class, 'userView'])->name('facebook');
+
+// Admin routes
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('login');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth:admin');
+
+// Scripts
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::resource('scripts', ScriptController::class);
+    Route::get('/scripts/create', [ScriptController::class, 'create'])->name('admin.scripts.create');
+    Route::post('/scripts/store', [ScriptController::class, 'store'])->name('admin.scripts.store');
+    Route::get('/scripts', [ScriptController::class, 'index'])->name('admin.scripts.index');
+    Route::get('/create-script', [ScriptController::class, 'create'])->name('admin.create_script');
+});
+
+
+// Facebook routes for the admin
+Route::prefix('admin')->middleware(['auth:Admin'])->name('admin.')->group(function () {
+    Route::resource('facebook', FacebookGroupController::class);
+    Route::get('facebook', [FacebookGroupController::class, 'userView'])->name('facebook');
+});
+
 // Group controllers
-Route::prefix('admin')->middleware('auth')->group(function () {
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::get('/groups', [GroupController::class, 'index'])->name('admin.groups.index');
     Route::get('/groups/create', [GroupController::class, 'create'])->name('admin.groups.create');
     Route::post('/groups', [GroupController::class, 'store'])->name('admin.groups.store');
@@ -36,61 +60,53 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('/groups/{id}', [GroupController::class, 'destroy'])->name('admin.groups.destroy');
 });
 
-// Scripts
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::resource('scripts', ScriptController::class);
+
+
+// Analytics
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('/analytics/{id}/edit', [AnalyticsController::class, 'edit'])->name('analytics.edit');
+    Route::put('/analytics/{id}', [AnalyticsController::class, 'update'])->name('analytics.update');
+    Route::delete('/analytics/{id}', [AnalyticsController::class, 'destroy'])->name('analytics.destroy');
 });
 
-// WhatsApp
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('whatsapp',WhatsAppGroupController::class);
+//  Whatsapp
+Route::prefix('admin')->middleware(['auth:admin'])->name('admin.')->group(function () {
+    Route::resource('whatsapp', WhatsAppGroupController::class);
 });
 
 // Facebook
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->middleware(['auth:admin'])->name('admin.')->group(function () {
     Route::resource('facebook', FacebookGroupController::class);
 });
-
-// For users
-Route::get('/facebook', [FacebookGroupController::class, 'userView'])->name('facebook');
 
 // Telegram
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('telegram',TelegramGroupController::class);
-});
-
-// Analytics
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
-    Route::get('/admin/analytics/{id}/edit', [AnalyticsController::class, 'edit'])->name('analytics.edit');
-    Route::put('/admin/analytics/{id}', [AnalyticsController::class, 'update'])->name('analytics.update');
-    Route::delete('/admin/analytics/{id}', [AnalyticsController::class, 'destroy'])->name('analytics.destroy');
-});
-
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
-    Route::get('/admin/analytics/{id}/edit', [AnalyticsController::class, 'edit'])->name('analytics.edit');
-    Route::put('/admin/analytics/{id}', [AnalyticsController::class, 'update'])->name('analytics.update');
-    Route::delete('/admin/analytics/{id}', [AnalyticsController::class, 'destroy'])->name('analytics.destroy');
-});
-
-// Admin routes
-Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('login');
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth:admin');
-
-// Grouped admin routes with middleware
-Route::prefix('admin')->middleware('auth:admin')->group(function () {
-    Route::get('/scripts/create', [ScriptController::class, 'create'])->name('admin.scripts.create');
-    Route::post('/scripts/store', [ScriptController::class, 'store'])->name('admin.scripts.store');
-    Route::get('/scripts', [ScriptController::class, 'index'])->name('admin.scripts.index');
-    Route::get('/create-script', [ScriptController::class, 'create'])->name('admin.create_script');
+Route::prefix('admin')->middleware(['auth:admin'])->name('admin.')->group(function () {
+    Route::resource('telegram', TelegramGroupController::class);
 });
 
 
+// Route::middleware(['auth:admin'])->group(function () {
+//     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+//     Route::get('/admin/analytics/{id}/edit', [AnalyticsController::class, 'edit'])->name('analytics.edit');
+//     Route::put('/admin/analytics/{id}', [AnalyticsController::class, 'update'])->name('analytics.update');
+//     Route::delete('/admin/analytics/{id}', [AnalyticsController::class, 'destroy'])->name('analytics.destroy');
+// });
 
-// Facebook routes for the admin
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('facebook', FacebookGroupController::class);
-    Route::get('facebook', [FacebookGroupController::class, 'userView'])->name('facebook');
-});
+// // WhatsApp
+// Route::middleware(['auth:Admin'])->prefix('admin')->name('admin.')->group(function () {
+//     Route::resource('whatsapp',WhatsAppGroupController::class);
+// });
+
+
+
+// Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
+//     Route::resource('facebook', FacebookGroupController::class);
+// });
+// Grouped admin routes with middleware for scripts
+// Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+//     Route::get('/scripts/create', [ScriptController::class, 'create'])->name('admin.scripts.create');
+//     Route::post('/scripts/store', [ScriptController::class, 'store'])->name('admin.scripts.store');
+//     Route::get('/scripts', [ScriptController::class, 'index'])->name('admin.scripts.index');
+//     Route::get('/create-script', [ScriptController::class, 'create'])->name('admin.create_script');
+// });
