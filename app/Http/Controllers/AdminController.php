@@ -19,8 +19,10 @@ class AdminController extends Controller
 
         // Attempt to log in the admin
         if (Auth::guard('admin')->attempt($credentials)) {
-            return redirect()->route('admin.dashboard');
+            # redirect after successful login
+              return redirect()->intended('admin.dashboard');
         }
+
 
         return back()->withErrors([
             'email' => 'Invalid credentials provided',
@@ -30,7 +32,6 @@ class AdminController extends Controller
     public function dashboard()
     {
         $analytics = [];
-        return view('admin.dashboard',$analytics);
+        return view('admin.dashboard', $analytics);
     }
 }
-

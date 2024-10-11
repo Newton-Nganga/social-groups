@@ -66,6 +66,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/analytics/{id}', [AnalyticsController::class, 'update'])->name('analytics.update');
     Route::delete('/admin/analytics/{id}', [AnalyticsController::class, 'destroy'])->name('analytics.destroy');
 });
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/admin/analytics/{id}/edit', [AnalyticsController::class, 'edit'])->name('analytics.edit');
