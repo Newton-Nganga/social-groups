@@ -166,7 +166,7 @@
     </div>
 
     <div class="sidebar">
-        
+
         <ul>
             <li><a href="{{ route('admin.groups.index') }}">All Groups</a></li>
             <li><a href="{{ route('admin.create_script') }}">Scripts</a></li>

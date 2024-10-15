@@ -12,6 +12,7 @@ class WhatsAppGroupController extends Controller
     // List all WhatsApp groups
     public function index() {
         $groups = WhatsAppGroup::all();
+        // $groups = WhatsAppGroup::all();
         return view('admin.whatsapp.index', compact('groups'));
     }
 

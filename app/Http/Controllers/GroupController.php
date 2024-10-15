@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group; // Assuming you have a Group model
+use App\Models\WhatsAppGroup;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -42,7 +43,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:255',
             // Add other validation rules as needed
         ]);
-
+        
         $group = Group::findOrFail($id);
         $group->update($request->all()); // Update the group
         return redirect()->route('admin.groups.index')->with('success', 'Group updated successfully.');
@@ -58,5 +59,5 @@ class GroupController extends Controller
         $groups = WhatsAppGroup::all();
         return view('user.whatsapp.index', compact('groups'));
     }
-    
+
 }
