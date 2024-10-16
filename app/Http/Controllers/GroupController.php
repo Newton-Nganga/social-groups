@@ -2,22 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group; // Assuming you have a Group model
+use App\Helper\ResponseHelper;
+use App\Models\Groups; // Assuming you have a Group model
 use App\Models\WhatsAppGroup;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $groups = Group::all(); // Fetch all groups
+        $groups = Groups::all(); // Fetch all groups
+        // dd($request->expectsJson());
+
+        // Return Json res  if its API request
+        // if ($request->expectsJson()) {
+        //     return ResponseHelper::success(
+        //         'success',
+        //         'Groups fetched successfully',
+        //         $groups
+        //     );
+        // };
+
+        // return view
         return view('admin.groups.index', compact('groups'));
     }
 
     public function create()
     {
         $analytics = []; //expected array of analytics
-        return view('admin.groups.create',$analytics);
+        return view('admin.groups.create', $analytics);
     }
 
     public function store(Request $request)
@@ -27,13 +40,13 @@ class GroupController extends Controller
             // Add other validation rules as needed
         ]);
 
-        Group::create($request->all()); // Create a new group
+        Groups::create($request->all()); // Create a new group
         return redirect()->route('admin.groups.index')->with('success', 'Group created successfully.');
     }
 
     public function edit($id)
     {
-        $group = Group::findOrFail($id);
+        $group = Groups::findOrFail($id);
         return view('admin.groups.edit', compact('group'));
     }
 
@@ -43,21 +56,21 @@ class GroupController extends Controller
             'name' => 'required|string|max:255',
             // Add other validation rules as needed
         ]);
-        
-        $group = Group::findOrFail($id);
+
+        $group = Groups::findOrFail($id);
         $group->update($request->all()); // Update the group
         return redirect()->route('admin.groups.index')->with('success', 'Group updated successfully.');
     }
 
     public function destroy($id)
     {
-        $group = Group::findOrFail($id);
+        $group = Groups::findOrFail($id);
         $group->delete(); // Delete the group
         return redirect()->route('admin.groups.index')->with('success', 'Group deleted successfully.');
     }
-    public function userView() {
+    public function userView()
+    {
         $groups = WhatsAppGroup::all();
         return view('user.whatsapp.index', compact('groups'));
     }
-
 }

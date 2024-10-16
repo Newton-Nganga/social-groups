@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Analytics;
+use App\Models\Groups;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,5 +21,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        Groups::factory(20)->create();
+        //analytics seeder
+        Analytics::factory(10)->create();
     }
 }

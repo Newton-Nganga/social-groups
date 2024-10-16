@@ -6,15 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Group extends Model
+class Groups extends Model
 {
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name'
+        'name', 'phone', 'group_image', 'description', 'location'
+
     ];
 
-    
+
 
 
 }
