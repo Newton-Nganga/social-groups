@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('whats_app_groups', function (Blueprint $table) {
+        Schema::create('investments', function (Blueprint $table) {
             $table->id();
-            $table->string('group_name');
-            $table->string('group_link');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Assuming there's a 'users' table
+            $table->string('name');
+            $table->string('type');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('whatsapp_groups');
+        Schema::dropIfExists('investments');
     }
 };
